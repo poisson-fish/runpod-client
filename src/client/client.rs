@@ -7,7 +7,7 @@ use crate::backend::backend::{ RunpodBackend, RunpodParams };
 
 const DEFAULT_API_BASE: &str = "https://api.runpod.ai/v2";
 
-pub type RequestFuture<T> = Pin<Box<dyn Future<Output = T>>>;
+pub type RequestFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
 
 pub struct RunpodClient<T> where T: RunpodBackend {
     backend: T,

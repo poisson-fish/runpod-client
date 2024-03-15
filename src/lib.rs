@@ -2,12 +2,8 @@
 #![feature(associated_type_bounds)]
 
 
-mod client;
-mod backend;
-
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+pub mod client;
+pub mod backend;
 
 #[cfg(test)]
 mod tests {
@@ -16,9 +12,9 @@ mod tests {
     use crate::{backend::vllm::{vLLMParams, RunpodvLLM}, client::client::{RunpodClientAPI, RunpodClientBuilder, RunpodClientBuilderTrait}};
     #[test]
     fn test_builder_pattern() {
-        let backend = (); // Placeholder for actual backend type
+        let backend = RunpodvLLM; // Placeholder for actual backend type
 
-        let client = RunpodClientBuilder::new(RunpodvLLM)
+        let client = RunpodClientBuilder::new(backend)
             .with_api_base(Url::parse("https://example.com/").unwrap())
             .with_api_key("test_key".to_string())
             .with_machine_id("test_machine".to_string())
