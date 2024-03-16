@@ -4,12 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "clientlib"
+name = "rpc"
 path = "src/lib.rs"
 
 [[bin]]
-name = "testing"
-path = "src/test.rs"
+name = "simplechat"
+path = "src/chat.rs"
 
 [dependencies]
 anyhow = "1.0.81"

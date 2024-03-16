@@ -239,6 +239,21 @@ pub struct VLLMParams {
     batch_size_growth_factor: Option<u64>,
 }
 
+impl VLLMParams {
+    pub fn new() -> Self {
+        Self {
+            prompt: Default::default(),
+            messages: None,
+            apply_chat_template: None,
+            sampling_params: None,
+            stream: None,
+            max_batch_size: None,
+            min_batch_size: None,
+            batch_size_growth_factor: None,
+        }
+    }
+}
+
 impl Default for VLLMParams {
     fn default() -> Self {
         Self {
@@ -336,14 +351,12 @@ async fn queue_job(
         .unwrap()
         .join("run")
         .unwrap();
-    println!("req url: {:#?}", machine_run_async);
     let client = reqwest::Client::new();
 
 
     let request = json!({
         "input": params
     });
-    println!("params: {:#?}", request);
 
     client
         .post(machine_run_async)
@@ -382,7 +395,7 @@ async fn wait_for_completion(job_id: &str, api_base: Url, machine_id: String, ap
                 break Err(Error::msg("RunPod job status FAILED."));
             },
             _ => {
-                tokio::time::sleep(Duration::from_millis(750)).await;
+                tokio::time::sleep(Duration::from_millis(500)).await;
             }
         }
     }
@@ -394,7 +407,7 @@ impl RunpodClientAPI<VLLMParams, Result<Value, Error>> for RunpodClient<RunpodvL
         Box::pin(async move {
 
             let response = queue_job(self.api_base.clone(), self.machine_id.clone(), self.api_key.clone(), params).await?;
-
+            
             let comp: Result<Value, Error> = match response.get("status").unwrap().as_str() {
                 Some("IN_QUEUE") => async {
                     //Queued successfully
