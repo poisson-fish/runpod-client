@@ -3,14 +3,14 @@ use std::{ future::Future, marker::PhantomData, pin::Pin };
 use async_trait::async_trait;
 use reqwest::Url;
 
-use crate::backend::backend::{ RunpodBackend, RunpodParams };
+use crate::backend::backend::RunpodBackend;
 
 const DEFAULT_API_BASE: &str = "https://api.runpod.ai/v2";
 
 pub type RequestFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
 
-pub struct RunpodClient<T> where T: RunpodBackend {
-    backend: T,
+pub struct RunpodClient<T> {
+    pub backend: PhantomData<T>,
     pub api_base: Url,
     pub api_key: String,
     pub machine_id: String,
@@ -18,21 +18,21 @@ pub struct RunpodClient<T> where T: RunpodBackend {
 
 #[async_trait]
 pub trait RunpodClientAPI<Req, Res> {
-    async fn request(&self, params: Req) -> RequestFuture<Res>;
+    fn request(&self, params: Req) -> RequestFuture<Res>;
 }
 
 pub struct RunpodClientBuilder<Backend> where Backend: RunpodBackend,
  {
-    backend: Backend,
+    backend: PhantomData<Backend>,
     api_base: Option<Url>,
     api_key: Option<String>,
     machine_id: Option<String>,
 }
 
 impl<T> RunpodClientBuilder<T> where T: RunpodBackend {
-    pub fn new(backend: T) -> Self {
+    pub fn new(_backend: T) -> Self {
         RunpodClientBuilder::<T> {
-            backend,
+            backend: PhantomData::<T>,
             api_base: None,
             api_key: None,
             machine_id: None,
@@ -65,10 +65,10 @@ impl<T> RunpodClientBuilderTrait<T> for RunpodClientBuilder<T> where T: RunpodBa
 
     fn build(self) -> RunpodClient<T> {
         RunpodClient::<T> {
-            backend: self.backend,
             api_base: self.api_base.unwrap_or(Url::parse(DEFAULT_API_BASE).unwrap()),
             api_key: self.api_key.unwrap_or_default(),
             machine_id: self.machine_id.unwrap_or_default(),
+            backend: PhantomData::<T>,
         }
     }
 }

@@ -9,7 +9,7 @@ pub mod backend;
 mod tests {
     use reqwest::Url;
 
-    use crate::{backend::vllm::{vLLMParams, RunpodvLLM}, client::client::{RunpodClientAPI, RunpodClientBuilder, RunpodClientBuilderTrait}};
+    use crate::{backend::vllm::RunpodvLLM, client::client::{ RunpodClientBuilder, RunpodClientBuilderTrait}};
     #[test]
     fn test_builder_pattern() {
         let backend = RunpodvLLM; // Placeholder for actual backend type
