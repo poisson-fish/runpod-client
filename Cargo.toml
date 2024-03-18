@@ -3,6 +3,9 @@ name = "runpod-client"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+chat = []
+
 [lib]
 name = "rpc"
 path = "src/lib.rs"
@@ -10,6 +13,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "simplechat"
 path = "src/chat.rs"
+required-features = ["chat"]
 
 [dependencies]
 anyhow = "1.0.81"

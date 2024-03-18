@@ -12,7 +12,7 @@ use rpc::{
 };
 use reqwest::Url;
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 20)]
+#[tokio::main(flavor = "multi_thread", worker_threads = 2)]
 async fn main() -> Result<(), anyhow::Error> {
     let backend = RunpodvLLM; // Placeholder for actual backend type
 
