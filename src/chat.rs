@@ -36,12 +36,12 @@ async fn main() -> Result<(), anyhow::Error> {
 
     loop {
         let mut s = String::new();
-        print!("Please enter a prompt: ");
+        print!("User: ");
         let _ = stdout().flush();
         stdin().read_line(&mut s).expect("Did not enter a correct string");
         s = s.trim().to_string();
 
-        println!("Queueing job...\n\nUser: {}", s);
+        println!("Queueing job...\n\n");
 
         let resp = client.request(
             VLLMParams::new()
@@ -51,7 +51,10 @@ async fn main() -> Result<(), anyhow::Error> {
                         s
                     )
                 )
-                .with_sampling_params(VLLMSamplingParams::new().with_max_tokens(512))
+                .with_sampling_params(VLLMSamplingParams::new()
+                    .with_max_tokens(512)
+                    .with_temperature(1.0)
+                    .with_top_p(0.95))
                 .build()
         ).await?;
 
