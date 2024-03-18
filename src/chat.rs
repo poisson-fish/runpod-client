@@ -52,6 +52,8 @@ async fn main() -> Result<(), anyhow::Error> {
                 .with_sampling_params(VLLMSamplingParams::new().with_max_tokens(512))
                 .build()
         ).await?;
-        println!("{:#?}", resp.output.unwrap()[0].choices[0][0][0]);
+
+        let completion = resp.output.unwrap()[0].choices[0].tokens[0].clone();
+        println!("{}", completion);
     }
 }
