@@ -19,28 +19,28 @@ pub struct RunpodvLLM;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Completion { 
-    tokens: Vec<String>
+    pub tokens: Option<Vec<String>>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CompletionChoice {
-    choices: Vec<Completion>,
-    usage: CompletionUsage
+    pub choices: Option<Vec<Completion>>,
+    pub usage: Option<CompletionUsage>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CompletionUsage { 
-    input: u64,
-    output: u64
+    pub input: Option<u64>,
+    pub output: Option<u64>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct VLLMCompletion {
-    delayTime: Option<u64>,
-    executionTime: Option<u64>,
-    id: String,
-    output: Option<Vec<CompletionChoice>>,
-    status: Option<String>
+    pub delayTime: Option<u64>,
+    pub executionTime: Option<u64>,
+    pub id: Option<String>,
+    pub output: Option<Vec<CompletionChoice>>,
+    pub status: Option<String>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
