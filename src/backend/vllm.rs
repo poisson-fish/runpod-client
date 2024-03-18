@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 use std::{ collections::HashMap, time::Duration };
 
 use async_trait::async_trait;
@@ -14,6 +16,32 @@ use anyhow::Error;
 use serde::{ Deserialize, Serialize };
 
 pub struct RunpodvLLM;
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Completion { 
+    tokens: Vec<String>
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct CompletionChoice {
+    choices: Vec<Completion>,
+    usage: CompletionUsage
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct CompletionUsage { 
+    input: u64,
+    output: u64
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct VLLMCompletion {
+    delayTime: Option<u64>,
+    executionTime: Option<u64>,
+    id: String,
+    output: Vec<CompletionChoice>,
+    status: Option<String>
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct VLLMSamplingParams {
@@ -367,7 +395,7 @@ async fn queue_job(
         .map_err(|x| x.into())
 }
 
-async fn wait_for_completion(job_id: &str, api_base: Url, machine_id: String, api_key: String) -> Result<Value, Error> {
+async fn wait_for_completion(job_id: &str, api_base: Url, machine_id: String, api_key: String) -> Result<VLLMCompletion, Error> {
 
     let machine_status_async: Url = api_base
         .join(std::format!("{}/", machine_id).as_str())
@@ -384,14 +412,18 @@ async fn wait_for_completion(job_id: &str, api_base: Url, machine_id: String, ap
             .get(machine_status_async.clone())
             .bearer_auth(api_key.clone())
             .send().await?
-            .json::<Value>().await?;
+            .json::<VLLMCompletion>().await?;
 
-        match response["status"].as_str() {
-            Some("COMPLETED") => {
+        match response
+            .status
+            .as_ref()
+            .expect("Didn't get status from job queue.")
+            .as_str() {
+            "COMPLETED" => {
                 // All done
                 break Ok(response);
             },
-            Some("FAILED") => {
+            "FAILED" => {
                 break Err(Error::msg("RunPod job status FAILED."));
             },
             _ => {
@@ -402,20 +434,19 @@ async fn wait_for_completion(job_id: &str, api_base: Url, machine_id: String, ap
 
 }
 #[async_trait]
-impl RunpodClientAPI<VLLMParams, Result<Value, Error>> for RunpodClient<RunpodvLLM> {
-    fn request(&self, params: VLLMParams) -> RequestFuture<Result<Value, Error>> {
+impl RunpodClientAPI<VLLMParams, Result<VLLMCompletion, Error>> for RunpodClient<RunpodvLLM> {
+    fn request(&self, params: VLLMParams) -> RequestFuture<Result<VLLMCompletion, Error>> {
         Box::pin(async move {
 
             let response = queue_job(self.api_base.clone(), self.machine_id.clone(), self.api_key.clone(), params).await?;
             
-            let comp: Result<Value, Error> = match response.get("status").unwrap().as_str() {
+            let comp: Result<VLLMCompletion, Error> = match response.get("status").unwrap().as_str() {
                 Some("IN_QUEUE") => async {
                     //Queued successfully
                     let id = response["id"].as_str().unwrap();
                     let status = response["status"].as_str().unwrap();
                     println!("{}: {}", id, status);
-                    let completion = wait_for_completion(id, self.api_base.clone(), self.machine_id.clone(), self.api_key.clone()).await.unwrap(); // This will only crash the pinned thread
-                    Ok(completion)
+                    wait_for_completion(id, self.api_base.clone(), self.machine_id.clone(), self.api_key.clone()).await
                 }.await,
                 _ => {
                     //Something happened
@@ -425,10 +456,5 @@ impl RunpodClientAPI<VLLMParams, Result<Value, Error>> for RunpodClient<RunpodvL
             };
             comp
         })
-
-        /*println!("txt2txt_res: {:#?}", txt2txt_res);
-        let response = txt2txt_res["output"]["choices"][0]["text"].as_str();
-        println!("{:#?}", response);
-        response.unwrap().to_owned();*/
     }
 }
