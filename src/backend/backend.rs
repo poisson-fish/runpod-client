@@ -1,6 +1,3 @@
-pub trait RunpodBackend {
+pub trait RunpodBackend: {}
 
-}
-pub trait RunpodParams: Sized {
-
-}
+pub trait RunpodParams: {}

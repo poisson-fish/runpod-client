@@ -395,7 +395,7 @@ async fn queue_job(
         .map_err(|x| x.into())
 }
 
-async fn wait_for_completion(job_id: &str, api_base: Url, machine_id: String, api_key: String) -> Result<VLLMCompletion, Error> {
+async fn wait_for_completion(job_id: &str, api_base: Url, machine_id: String, api_key: String, poll_time: Duration) -> Result<VLLMCompletion, Error> {
 
     let machine_status_async: Url = api_base
         .join(std::format!("{}/", machine_id).as_str())
@@ -427,7 +427,7 @@ async fn wait_for_completion(job_id: &str, api_base: Url, machine_id: String, ap
                 break Err(Error::msg("RunPod job status FAILED."));
             },
             _ => {
-                tokio::time::sleep(Duration::from_millis(500)).await;
+                tokio::time::sleep(poll_time).await;
             }
         }
     }
@@ -444,7 +444,7 @@ impl RunpodClientAPI<VLLMParams, Result<VLLMCompletion, Error>> for RunpodClient
                 Some("IN_QUEUE") => async {
                     //Queued successfully
                     let id = response["id"].as_str().unwrap();
-                    wait_for_completion(id, self.api_base.clone(), self.machine_id.clone(), self.api_key.clone()).await
+                    wait_for_completion(id, self.api_base.clone(), self.machine_id.clone(), self.api_key.clone(), self.poll_time).await
                 }.await,
                 _ => {
                     //Something happened
