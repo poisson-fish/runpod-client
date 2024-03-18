@@ -19,13 +19,13 @@ pub struct RunpodvLLM;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Completion { 
-    pub tokens: Option<Vec<String>>
+    pub tokens: Vec<String>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CompletionChoice {
-    pub choices: Option<Vec<Completion>>,
-    pub usage: Option<CompletionUsage>
+    pub choices: Vec<Completion>,
+    pub usage: CompletionUsage
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -444,13 +444,10 @@ impl RunpodClientAPI<VLLMParams, Result<VLLMCompletion, Error>> for RunpodClient
                 Some("IN_QUEUE") => async {
                     //Queued successfully
                     let id = response["id"].as_str().unwrap();
-                    let status = response["status"].as_str().unwrap();
-                    println!("{}: {}", id, status);
                     wait_for_completion(id, self.api_base.clone(), self.machine_id.clone(), self.api_key.clone()).await
                 }.await,
                 _ => {
                     //Something happened
-                    println!("Couldn't queue prompt!");
                     Err(Error::msg("Couldn't queue prompt!"))
                 }
             };
