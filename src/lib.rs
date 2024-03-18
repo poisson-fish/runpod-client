@@ -1,7 +1,3 @@
-#![feature(associated_type_defaults)]
-#![feature(associated_type_bounds)]
-
-
 pub mod client;
 pub mod backend;
 
