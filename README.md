@@ -30,9 +30,6 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/poisson-fish/runpod-client">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
 
   <h3 align="center">runpod-client</h3>
 
@@ -48,31 +45,23 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About</a>
-      
-    </li>
+      <a href="#about">About</a>
     <li>
       <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About
 
-TODO
+This is an asynchronous client library implementing various RunPod serverless worker job requests. Currently it only implements the [worker-vllm](https://github.com/runpod-workers/worker-vllm) backend.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -81,15 +70,9 @@ TODO
 <!-- GETTING STARTED -->
 ## Getting Started
 
-TODO
+`cargo add runpod-client`
 
-### Prerequisites
-
-TODO
-
-### Installation
-
-TODO
+(Eventually, once the crate goes live on crates.io)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -98,9 +81,7 @@ TODO
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+You can find an example usage for the vLLM backend in [src/chat.rs](https://github.com/poisson-fish/runpod-client/blob/main/src/chat.rs). You can also use the example application to test your vLLM endpoints. To compile the example chat application, enable the `chat` feature.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -109,12 +90,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Add vLLM Serverless Support
+- [x] Add vLLM serverless support
 - [ ] Additional serverless backends
-- [ ] Poll timer builder
 - [ ] ?
-    - [ ] ?
-    - [ ] ?
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
