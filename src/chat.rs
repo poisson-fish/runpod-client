@@ -53,7 +53,7 @@ async fn main() -> Result<(), anyhow::Error> {
                 .build()
         ).await?;
 
-        let completion = resp.output.unwrap()[0].choices[0].tokens[0].clone();
+        let completion = resp.output.unwrap()[0].choices[0].tokens[0];
         println!("{}", completion);
     }
 }
