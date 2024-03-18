@@ -39,7 +39,7 @@ pub struct VLLMCompletion {
     delayTime: Option<u64>,
     executionTime: Option<u64>,
     id: String,
-    output: Vec<CompletionChoice>,
+    output: Option<Vec<CompletionChoice>>,
     status: Option<String>
 }
 
