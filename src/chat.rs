@@ -41,7 +41,7 @@ async fn main() -> Result<(), anyhow::Error> {
         stdin().read_line(&mut s).expect("Did not enter a correct string");
         s = s.trim().to_string();
 
-        println!("Queueing job...\n\n");
+        println!("Queueing job...");
 
         let resp = client.request(
             VLLMParams::new()
