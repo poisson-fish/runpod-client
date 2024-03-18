@@ -41,7 +41,7 @@ async fn main() -> Result<(), anyhow::Error> {
         stdin().read_line(&mut s).expect("Did not enter a correct string");
         s = s.trim().to_string();
 
-        println!("Queueing job...");
+        println!("Queueing job...\n\nUser: {}", s);
 
         let resp = client.request(
             VLLMParams::new()
@@ -56,6 +56,6 @@ async fn main() -> Result<(), anyhow::Error> {
         ).await?;
 
         let completion = &resp.output.unwrap()[0].choices[0].tokens[0];
-        println!("{}", completion);
+        println!("\n\nAssistant: {}", completion);
     }
 }
