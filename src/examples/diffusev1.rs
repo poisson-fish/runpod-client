@@ -33,7 +33,9 @@ async fn main() -> Result<(), anyhow::Error> {
 
         println!("Queueing job...");
 
-        let resp = client.request(StableDiffusionV1Params::new().with_prompt(s.clone()).build()).await?;
+        let resp = client.request(
+            StableDiffusionV1Params::new().with_prompt(s.clone()).build()
+        ).await?;
         let image_bytes = resp.output.clone().unwrap()[0].fetch().await.unwrap();
         s.truncate(7);
         let mut f = File::create(std::format!("./{}.png", s))?;
