@@ -1,11 +1,11 @@
 use std::{ fs::File, io::{ stdin, stdout, Write } };
 
 use rpc::{
-    backend::sdv1::{
-        StableDiffusionV1,
-        StableDiffusionV1OutputFetch,
-        StableDiffusionV1ParamBuilderTrait,
-        StableDiffusionV1Params,
+    backend::sdxl::{
+        StableDiffusionXL,
+        StableDiffusionXLOutputFetch,
+        StableDiffusionXLParamBuilderTrait,
+        StableDiffusionXLParams,
     },
     client::client::{ RunpodClientAPI, RunpodClientBuilder, RunpodClientBuilderTrait },
 };
@@ -19,7 +19,7 @@ async fn main() -> Result<(), anyhow::Error> {
     stdin().read_line(&mut key).expect("Did not enter a correct string");
     key = key.trim().to_string();
 
-    let client = RunpodClientBuilder::new(StableDiffusionV1)
+    let client = RunpodClientBuilder::new(StableDiffusionXL)
         .with_api_base(Url::parse("https://api.runpod.ai/v2/").unwrap())
         .with_api_key(key)
         .build();
@@ -34,7 +34,7 @@ async fn main() -> Result<(), anyhow::Error> {
         println!("Queueing job...");
 
         let resp = client.request(
-            StableDiffusionV1Params::new().with_prompt(s.clone()).build()
+            StableDiffusionXLParams::new().with_prompt(s.clone()).build()
         ).await?;
         let image_bytes = resp.output.clone().unwrap()[0].fetch().await.unwrap();
         s.truncate(7);

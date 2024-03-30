@@ -4,22 +4,22 @@ version = "0.1.0"
 edition = "2021"
 
 [features]
-chat_vllm = []
-diffuse_v1 = []
+chat = []
+diffuse = []
 
 [lib]
 name = "rpc"
 path = "src/lib.rs"
 
 [[bin]]
-name = "simplechat"
-path = "src/examples/chatvllm.rs"
-required-features = ["chat_vllm"]
+name = "chat"
+path = "src/examples/chat.rs"
+required-features = ["chat"]
 
 [[bin]]
-name = "diffusev1"
-path = "src/examples/diffusev1.rs"
-required-features = ["diffuse_v1"]
+name = "diffuse"
+path = "src/examples/diffuse.rs"
+required-features = ["diffuse"]
 
 [dependencies]
 anyhow = "1.0.81"
