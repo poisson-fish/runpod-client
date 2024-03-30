@@ -90,6 +90,7 @@ You can find an example usage for the vLLM backend in [src/chat.rs](https://gith
 ## Roadmap
 
 - [x] Add vLLM serverless support
+- [x] Add Stable Diffusion endpoints
 - [ ] Additional serverless backends
 - [ ] ?
 
