@@ -24,14 +24,15 @@ pub trait StableDiffusionXLOutputFetch {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct StableDiffusionXLOutput {
-    pub image: String,
+    pub image_url: String,
+    pub images: Vec<String>,
     pub seed: i64,
 }
 
 #[async_trait]
 impl StableDiffusionXLOutputFetch for StableDiffusionXLOutput {
     async fn fetch(&self) -> Result<Vec<u8>, Error> {
-        let url = Url::parse(self.image.as_str()).unwrap_or(Url::parse(DEFAULT_API_BASE).unwrap());
+        let url = Url::parse(self.image_url.as_str()).unwrap_or(Url::parse(DEFAULT_API_BASE).unwrap());
         reqwest::Client
             ::new()
             .get(url)
@@ -47,7 +48,7 @@ pub struct StableDiffusionXLResult {
     pub delayTime: Option<u64>,
     pub executionTime: Option<u64>,
     pub id: Option<String>,
-    pub output: Option<Vec<StableDiffusionXLOutput>>,
+    pub output: Option<StableDiffusionXLOutput>,
     pub status: Option<String>,
 }
 
@@ -184,7 +185,7 @@ async fn queue_job(
     params: StableDiffusionXLParams
 ) -> Result<Value, Error> {
     let machine_run_async: Url = api_base
-        .join("stable-diffusion-v1/")
+        .join("sdxl/")
         .unwrap()
         .join("run")
         .unwrap();

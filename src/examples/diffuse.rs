@@ -36,7 +36,7 @@ async fn main() -> Result<(), anyhow::Error> {
         let resp = client.request(
             StableDiffusionXLParams::new().with_prompt(s.clone()).build()
         ).await?;
-        let image_bytes = resp.output.clone().unwrap()[0].fetch().await.unwrap();
+        let image_bytes = resp.output.clone().unwrap().fetch().await.unwrap();
         s.truncate(7);
         let mut f = File::create(std::format!("./{}.png", s))?;
         f.write_all(image_bytes.as_slice())?;

@@ -172,7 +172,7 @@ async fn queue_job(
     params: StableDiffusionV2Params
 ) -> Result<Value, Error> {
     let machine_run_async: Url = api_base
-        .join("stable-diffusion-v1/")
+        .join("stable-diffusion-v2/")
         .unwrap()
         .join("run")
         .unwrap();
