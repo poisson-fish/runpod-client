@@ -4,7 +4,7 @@ use rpc::{
     backend::vllm::{
         VLLMParams,
         VLLMSamplingParams,
-        RunpodvLLM,
+        VLLM,
         VLLMParamBuilderTrait,
         VLLMSamplingParamBuilderTrait,
     },
@@ -14,7 +14,7 @@ use reqwest::Url;
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 2)]
 async fn main() -> Result<(), anyhow::Error> {
-    let backend = RunpodvLLM; // Placeholder for actual backend type
+    let backend = VLLM; // Placeholder for actual backend type
 
     let mut key = String::new();
     print!("Please enter your RunPod API Key: ");
@@ -41,7 +41,7 @@ async fn main() -> Result<(), anyhow::Error> {
         stdin().read_line(&mut s).expect("Did not enter a correct string");
         s = s.trim().to_string();
 
-        println!("Queueing job...");
+        println!("Queueing job...2");
 
         let resp = client.request(
             VLLMParams::new()

@@ -1,13 +1,11 @@
-use std::{ future::Future, marker::PhantomData, pin::Pin, time::Duration };
+use std::{ marker::PhantomData, time::Duration };
 
 use async_trait::async_trait;
 use reqwest::Url;
 
 use crate::backend::backend::RunpodBackend;
 
-const DEFAULT_API_BASE: &str = "https://api.runpod.ai/v2";
-
-pub type RequestFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
+pub const DEFAULT_API_BASE: &str = "https://api.runpod.ai/v2";
 
 pub struct RunpodClient<T> {
     pub backend: PhantomData<T>,
@@ -19,7 +17,7 @@ pub struct RunpodClient<T> {
 
 #[async_trait]
 pub trait RunpodClientAPI<Req, Res> {
-    fn request(&self, params: Req) -> RequestFuture<Res>;
+    async fn request(&self, params: Req) -> Res;
 }
 
 pub struct RunpodClientBuilder<Backend> where Backend: RunpodBackend,

@@ -5,7 +5,7 @@ use std::{ collections::HashMap, time::Duration };
 use async_trait::async_trait;
 use serde_json::{json, Value};
 
-use crate::client::client::{ RequestFuture, RunpodClient, RunpodClientAPI };
+use crate::client::client::{ RunpodClient, RunpodClientAPI };
 
 use super::backend::{ RunpodBackend, RunpodParams };
 
@@ -15,7 +15,7 @@ use anyhow::Error;
 
 use serde::{ Deserialize, Serialize };
 
-pub struct RunpodvLLM;
+pub struct VLLM;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Completion { 
@@ -297,7 +297,7 @@ impl Default for VLLMParams {
     }
 }
 
-impl RunpodBackend for RunpodvLLM {}
+impl RunpodBackend for VLLM {}
 
 impl RunpodParams for VLLMParams {}
 
@@ -433,11 +433,10 @@ async fn wait_for_completion(job_id: &str, api_base: Url, machine_id: String, ap
     }
 
 }
-#[async_trait]
-impl RunpodClientAPI<VLLMParams, Result<VLLMCompletion, Error>> for RunpodClient<RunpodvLLM> {
-    fn request(&self, params: VLLMParams) -> RequestFuture<Result<VLLMCompletion, Error>> {
-        Box::pin(async move {
 
+#[async_trait]
+impl RunpodClientAPI<VLLMParams, Result<VLLMCompletion, Error>> for RunpodClient<VLLM> {
+    async fn request(&self, params: VLLMParams) -> Result<VLLMCompletion, Error> {
             let response = queue_job(self.api_base.clone(), self.machine_id.clone(), self.api_key.clone(), params).await?;
             
             let comp: Result<VLLMCompletion, Error> = match response.get("status").unwrap().as_str() {
@@ -452,6 +451,5 @@ impl RunpodClientAPI<VLLMParams, Result<VLLMCompletion, Error>> for RunpodClient
                 }
             };
             comp
-        })
     }
 }
