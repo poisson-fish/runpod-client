@@ -80,7 +80,7 @@ This is an asynchronous client library implementing various RunPod serverless wo
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-You can find an example usage for the vLLM backend in [src/chat.rs](https://github.com/poisson-fish/runpod-client/blob/main/src/chat.rs). You can also use the example application to test your vLLM endpoints. To compile the example chat application, enable the `chat` feature.
+You can find example usage for various backends in [src/examples](https://github.com/poisson-fish/runpod-client/blob/main/src/examples). You can also use the example applications to test your RunPod endpoints. To compile the example applications, enable the `chat` and/or `diffuse` features.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
