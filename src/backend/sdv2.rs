@@ -3,6 +3,7 @@
 use std::time::Duration;
 
 use async_trait::async_trait;
+use log::info;
 use serde_json::{ json, Value };
 
 use crate::client::client::{ RunpodClient, RunpodClientAPI, DEFAULT_API_BASE };
@@ -182,13 +183,19 @@ async fn queue_job(
         "input": params
     });
 
-    client
+    info!("SDv2 Request: {:#?}", request);
+
+    let result = client
         .post(machine_run_async)
         .bearer_auth(api_key)
         .json(&request)
         .send().await?
         .json::<Value>().await
-        .map_err(|x| x.into())
+        .map_err(|x| x.into());
+    
+    info!("SDv2 Result: {:#?}", result);
+
+    result
 }
 
 async fn wait_for_completion(

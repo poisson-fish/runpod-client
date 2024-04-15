@@ -5,7 +5,7 @@ use reqwest::Url;
 
 use crate::backend::backend::RunpodBackend;
 
-pub const DEFAULT_API_BASE: &str = "https://api.runpod.ai/v2";
+pub const DEFAULT_API_BASE: &str = "https://api.runpod.ai/v2/";
 
 pub struct RunpodClient<T> {
     pub backend: PhantomData<T>,

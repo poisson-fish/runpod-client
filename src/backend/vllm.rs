@@ -3,6 +3,7 @@
 use std::{ collections::HashMap, time::Duration };
 
 use async_trait::async_trait;
+use log::info;
 use serde_json::{json, Value};
 
 use crate::client::client::{ RunpodClient, RunpodClientAPI };
@@ -386,13 +387,21 @@ async fn queue_job(
         "input": params
     });
 
-    client
+    info!("VLLM Request: {:#?}", request);
+
+    let resp = client
         .post(machine_run_async)
         .bearer_auth(api_key)
         .json(&request)
-        .send().await?
+        .send().await?.text().await?;
+    /*let result = resp
         .json::<Value>().await
-        .map_err(|x| x.into())
+        .map_err(|x| x.into());*/
+    let result = serde_json::from_str::<Value>(&resp).map_err(|x| x.into());
+    
+    info!("VLLM Result: {:#?}", resp);
+
+    result
 }
 
 async fn wait_for_completion(job_id: &str, api_base: Url, machine_id: String, api_key: String, poll_time: Duration) -> Result<VLLMCompletion, Error> {
